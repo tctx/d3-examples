@@ -1,4 +1,14 @@
-var data = [12, 18, 24, 30, 36, 42, 48, 100];
+// var data = [12, 18, 24, 30, 36, 42, 48, 100];]
+
+d3.csv("products.csv",function(data){
+
+  data.forEach(function(d){
+
+    d.value1 = +d.value1;
+
+  });
+
+  console.log(d3.max(data,function(d){return d.value1;}));
 
 // Once we have data, we now need to define variables used by D3
 // Examples include chart dimensions, scales, and anything else that can be defined now and accessed later
@@ -15,7 +25,7 @@ var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 100},
 // Here we will use our max data point and map it to 
 
 var yScale = d3.scaleLinear()
-        .domain([0, d3.max(data)])
+        .domain([0, d3.max(data,function(d){return d.value1;})])
         .range([height, 0]);
 // Use range function and length of data set to pass a domain
 var xScale = d3.scaleBand().domain(d3.range(data.length))
@@ -52,6 +62,7 @@ svg.append("g")
     .call(yAxis);
 
 // Attach the data, draw rectangles, pass x, y, width, height
+/*
 svg.selectAll("bar")
    .data(data)
    .enter()
@@ -65,7 +76,40 @@ svg.selectAll("bar")
    .attr("y", 0)
    .attr("height", height)
    .transition()
-   .duration(1000)
+   .delay(function(d, i) { return i * 100; })
    .attr("y", function(d){return yScale(d); })
    .attr("height", function(d){ return height - yScale(d); })
-   .style("fill","blue"); // Style changes are also supported -- notice that CSS attributes are not camelCase
+   .style("fill","orange"); // Style changes are also supported -- notice that CSS attributes are not camelCase
+*/
+
+/*
+
+ function endall(transition, callback) { 
+    if (typeof callback !== "function") throw new Error("Wrong callback in endall");
+    if (transition.size() === 0) { callback() }
+    var n = 0; 
+    transition 
+        .each(function() { ++n; }) 
+        .each("end", function() { if (!--n) callback.apply(this, arguments); }); 
+  } 
+
+  */
+
+   svg.selectAll("bar")
+   .data(data)
+   .enter()
+   .append("rect")
+   .attr("x", function(d,i) { return xScale(i); })
+   .attr("width", xScale.bandwidth())
+   .attr("y", height)
+   .transition()
+   .delay(function(d, i) { return i * 300; })
+   .duration(500)
+   .attr("y", function(d){return yScale(d.value1); })
+   .attr("height", function(d, i){ return height - yScale(d.value1); })
+   // .call(endall(),function(){alert("works");});
+
+
+
+
+});
