@@ -8,7 +8,9 @@ d3.csv("products.csv",function(data){
 
   });
 
-  console.log(d3.max(data,function(d){return d.value1;}));
+//console.log(d3.max(data,function(d){return d.value1;}));
+console.log(data);
+
 
 // Once we have data, we now need to define variables used by D3
 // Examples include chart dimensions, scales, and anything else that can be defined now and accessed later
@@ -28,7 +30,7 @@ var yScale = d3.scaleLinear()
         .domain([0, d3.max(data,function(d){return d.value1;})])
         .range([height, 0]);
 // Use range function and length of data set to pass a domain
-var xScale = d3.scaleBand().domain(d3.range(data.length))
+var xScale = d3.scaleBand().domain(data.map(function(d){ return d.month; }))
         .rangeRound([0,width])
         .paddingInner(0.05);
 
@@ -99,7 +101,7 @@ svg.selectAll("bar")
    .data(data)
    .enter()
    .append("rect")
-   .attr("x", function(d,i) { return xScale(i); })
+   .attr("x", function(d,i) { return xScale(d.month); })
    .attr("width", xScale.bandwidth())
    .attr("y", height)
    .transition()
