@@ -109,8 +109,15 @@ svg.selectAll("bar")
    .duration(500)
    .attr("y", function(d){return yScale(d.value1); })
    .attr("height", function(d, i){ return height - yScale(d.value1); })
-   // .call(endall(),function(){alert("works");});
-
+   // try to animate each bar to the right
+   //.attr("width", xScale.bandwidth()-100)
+   .transition()
+   .delay(function(d, i) { return i * 300; })
+   .attr("width", xScale.bandwidth()-100)
+   .transition()
+   .duration(1000)
+   .attr("y", function(d){return height; })
+   .attr("height", function(d, i){ return height - height; })
 
 
 
